@@ -1,6 +1,14 @@
 'use client'
 
 import { FORMATS, FORMAT_LABELS } from '@/lib/api'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
 
 interface Props {
   format: string
@@ -11,31 +19,38 @@ interface Props {
 
 export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
   return (
-    <div className="flex items-center gap-6">
-      <label className="flex items-center gap-2 text-sm">
-        <span className="text-neutral-500">Format</span>
-        <select
-          value={format}
-          onChange={(e) => onFormat(e.target.value)}
-          className="border border-neutral-200 rounded px-2 py-1 text-sm"
+    <div className="flex items-center gap-4 flex-wrap mb-6">
+      <div className="flex items-center gap-2">
+        <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Format</span>
+        <Select
+          value={format || '_original'}
+          onValueChange={(v) => v !== null && onFormat(v === '_original' ? '' : v)}
         >
-          {FORMATS.map((f) => (
-            <option key={f} value={f}>{FORMAT_LABELS[f]}</option>
-          ))}
-        </select>
-      </label>
-      <label className="flex items-center gap-2 text-sm">
-        <span className="text-neutral-500">Quality</span>
-        <input
-          type="range"
+          <SelectTrigger className="w-36 h-8 text-sm bg-card border-border">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-card border-border">
+            {FORMATS.map((f) => (
+              <SelectItem key={f || '_original'} value={f || '_original'} className="text-sm">
+                {FORMAT_LABELS[f]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Quality</span>
+        <Slider
           min={1}
           max={100}
-          value={quality}
-          onChange={(e) => onQuality(Number(e.target.value))}
+          step={1}
+          value={[quality]}
+          onValueChange={(v) => onQuality(Array.isArray(v) ? v[0] : v)}
           className="w-28"
         />
-        <span className="w-8 text-neutral-700">{quality}</span>
-      </label>
+        <span className="text-sm text-foreground w-7 text-right tabular-nums">{quality}</span>
+      </div>
     </div>
   )
 }

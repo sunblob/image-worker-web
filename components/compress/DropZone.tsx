@@ -2,13 +2,15 @@
 
 import { useRef, useState } from 'react'
 import { MAX_FILE_BYTES } from '@/lib/api'
+import { Upload } from 'lucide-react'
 
 interface Props {
   onFiles: (files: File[]) => void
   disabled?: boolean
+  flashing?: boolean
 }
 
-export function DropZone({ onFiles, disabled }: Props) {
+export function DropZone({ onFiles, disabled, flashing }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
 
@@ -34,14 +36,33 @@ export function DropZone({ onFiles, disabled }: Props) {
         setDragging(false)
         if (!disabled) handle(e.dataTransfer.files)
       }}
-      className={`border-2 border-dashed rounded-lg p-10 text-center cursor-pointer transition-colors select-none ${
-        dragging ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-300 hover:border-neutral-400'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={[
+        'relative flex h-56 w-full max-w-2xl flex-col items-center justify-center gap-3',
+        'rounded-2xl border-2 border-dashed transition-all duration-200 select-none',
+        'cursor-pointer',
+        dragging
+          ? 'border-primary/60 scale-[1.01]'
+          : 'border-primary/40 hover:border-primary/60',
+        disabled ? 'opacity-50 pointer-events-none' : '',
+        flashing ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : '',
+      ].join(' ')}
+      style={{
+        background: dragging
+          ? 'radial-gradient(ellipse at 50% 60%, rgba(99,102,241,0.12) 0%, transparent 70%)'
+          : 'radial-gradient(ellipse at 50% 60%, rgba(99,102,241,0.06) 0%, transparent 70%)',
+      }}
     >
-      <p className="text-sm text-neutral-500">
-        Drop images here or <span className="underline">click to browse</span>
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+        <Upload className="h-6 w-6 text-primary" />
+      </div>
+      <p className="text-base font-semibold text-foreground">Drop images here</p>
+      <p className="text-sm text-muted-foreground text-center leading-relaxed">
+        or <span className="text-primary">click to browse</span>
+        {' · '}
+        <span className="text-primary">paste from clipboard</span>
+        <br />
+        PNG, JPG, WEBP, AVIF · Max 50MB per file
       </p>
-      <p className="text-xs text-neutral-400 mt-1">Max 50MB per file</p>
       <input
         ref={inputRef}
         type="file"

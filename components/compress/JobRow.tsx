@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { pollJob, downloadUrl, type JobRecord } from '@/lib/api'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ImageIcon } from 'lucide-react'
 
 interface Props {
   id: string
@@ -9,6 +12,17 @@ interface Props {
   /** Set to 'error' when the server immediately rejected the file (e.g. unsupported extension). Skips polling. */
   initialStatus?: 'error'
   onDone?: (id: string) => void
+}
+
+function formatBytes(b: number) {
+  if (b < 1024) return `${b} B`
+  if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`
+  return `${(b / (1024 * 1024)).toFixed(1)} MB`
+}
+
+function savings(before: number, after: number) {
+  const pct = Math.round((1 - after / before) * 100)
+  return pct > 0 ? `-${pct}%` : `+${Math.abs(pct)}%`
 }
 
 export function JobRow({ id, filename, initialStatus, onDone }: Props) {
@@ -49,22 +63,12 @@ export function JobRow({ id, filename, initialStatus, onDone }: Props) {
     }
   }, [id, initialStatus, onDone])
 
-  function formatBytes(b: number) {
-    if (b < 1024) return `${b} B`
-    if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`
-    return `${(b / (1024 * 1024)).toFixed(1)} MB`
-  }
-
-  function savings(before: number, after: number) {
-    const pct = Math.round((1 - after / before) * 100)
-    return pct > 0 ? `-${pct}%` : `+${Math.abs(pct)}%`
-  }
-
   if (initialStatus === 'error') {
     return (
-      <div className="flex items-center gap-4 py-2 px-3 rounded bg-red-50 text-sm">
-        <span className="flex-1 truncate text-neutral-700">{filename}</span>
-        <span className="text-red-500 text-xs">Unsupported format</span>
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm">
+        <ImageIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <span className="flex-1 truncate text-foreground">{filename}</span>
+        <Badge variant="destructive" className="text-xs">Unsupported format</Badge>
       </div>
     )
   }
@@ -72,35 +76,34 @@ export function JobRow({ id, filename, initialStatus, onDone }: Props) {
   const status = expired ? 'expired' : (job?.status ?? 'processing')
 
   return (
-    <div className="flex items-center gap-4 py-2 px-3 rounded hover:bg-neutral-50 text-sm">
-      <span className="flex-1 truncate text-neutral-700">{filename}</span>
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm hover:bg-secondary/30 transition-colors">
+      <ImageIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+      <span className="flex-1 truncate text-foreground">{filename}</span>
 
       {status === 'processing' && (
-        <span className="text-xs text-neutral-400 animate-pulse">Processing…</span>
+        <span className="text-xs text-primary animate-pulse">Processing…</span>
       )}
 
       {status === 'done' && job && (
         <>
-          <span className="text-xs text-neutral-400">
+          <span className="text-xs text-muted-foreground whitespace-nowrap">
             {formatBytes(job.sizeBefore)} → {formatBytes(job.sizeAfter!)}
-            <span className="ml-1 text-green-600">{savings(job.sizeBefore, job.sizeAfter!)}</span>
+            <span className="ml-1.5 text-green-400 font-medium">
+              {savings(job.sizeBefore, job.sizeAfter!)}
+            </span>
           </span>
-          <a
-            href={downloadUrl(id)}
-            download
-            className="text-xs px-2 py-1 rounded bg-neutral-900 text-white hover:bg-neutral-700 transition-colors"
-          >
+          <Button size="sm" variant="secondary" className="h-7 text-xs" render={<a href={downloadUrl(id)} download />}>
             Download
-          </a>
+          </Button>
         </>
       )}
 
       {status === 'error' && (
-        <span className="text-red-500 text-xs">{job?.error ?? 'Failed'}</span>
+        <span className="text-xs text-destructive">{job?.error ?? 'Failed'}</span>
       )}
 
       {status === 'expired' && (
-        <span className="text-neutral-400 text-xs">Expired</span>
+        <span className="text-xs text-muted-foreground">Expired</span>
       )}
     </div>
   )

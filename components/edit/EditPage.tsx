@@ -9,6 +9,7 @@ import { ImagePreview } from './ImagePreview'
 export function EditPage() {
   const [opts, setOpts] = useState<EditOptions>({ quality: 80 })
   const [applying, setApplying] = useState(false)
+  const [flashing, setFlashing] = useState(false)
 
   const originalFileRef = useRef<File | null>(null)
   const [firstJobId, setFirstJobId] = useState<string | null>(null)
@@ -34,6 +35,21 @@ export function EditPage() {
     setCurrentJobId(null)
     setCurrentJob(null)
   }
+
+  useEffect(() => {
+    function onPaste(e: ClipboardEvent) {
+      const items = Array.from(e.clipboardData?.items ?? [])
+      const file = items
+        .find((i) => i.kind === 'file' && i.type.startsWith('image/'))
+        ?.getAsFile()
+      if (!file) return
+      setFlashing(true)
+      setTimeout(() => setFlashing(false), 600)
+      loadFile(file)
+    }
+    document.addEventListener('paste', onPaste)
+    return () => document.removeEventListener('paste', onPaste)
+  }, [])
 
   async function handleApply() {
     const originalFile = originalFileRef.current
@@ -94,11 +110,13 @@ export function EditPage() {
   const hasImage = !!previewSrc
 
   return (
-    <div className="max-w-4xl">
-      <h1 className="text-xl font-semibold mb-6">Edit</h1>
+    <div className="max-w-4xl w-full">
+      <h1 className="text-xl font-semibold text-foreground mb-6">Edit</h1>
 
       {!hasImage ? (
-        <DropZone onFiles={([file]) => loadFile(file)} />
+        <div className="flex justify-center">
+          <DropZone onFiles={([file]) => loadFile(file)} flashing={flashing} />
+        </div>
       ) : (
         <div className="flex gap-8 items-start">
           <ImagePreview

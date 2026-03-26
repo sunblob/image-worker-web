@@ -10,8 +10,8 @@ export const metadata: Metadata = { title: 'Image Worker' }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body className="flex min-h-screen bg-white text-neutral-900 antialiased">
+    <html lang="en" className={cn("dark font-sans", geist.variable)}>
+      <body className="flex min-h-screen bg-background text-foreground antialiased">
         <Sidebar />
         <main className="flex-1 p-8">{children}</main>
       </body>
