@@ -6,7 +6,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -51,7 +50,7 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
             onValueChange={(v) => v !== null && s('format', (v === '_original' ? undefined : v) as EditOptions['format'])}
           >
             <SelectTrigger className="w-32 h-8 text-xs bg-card border-border">
-              <SelectValue />
+              <span>{FORMAT_LABELS[opts.format ?? ''] || 'Keep original'}</span>
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               <SelectItem value="_original" className="text-xs">Keep original</SelectItem>
@@ -106,7 +105,7 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
             onValueChange={(v) => v !== null && s('fit', v as EditOptions['fit'])}
           >
             <SelectTrigger className="w-32 h-8 text-xs bg-card border-border">
-              <SelectValue />
+              <span>{opts.fit ?? 'cover'}</span>
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               {FITS.map((f) => (
@@ -156,7 +155,7 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
             onValueChange={(v) => v !== null && s('rotate', Number(v) as EditOptions['rotate'])}
           >
             <SelectTrigger className="w-32 h-8 text-xs bg-card border-border">
-              <SelectValue />
+              <span>{opts.rotate ?? 0}°</span>
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               {ROTATIONS.map((r) => (
@@ -173,7 +172,7 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
             onValueChange={(v) => v !== null && s('flip', (v === 'none' ? undefined : v) as EditOptions['flip'])}
           >
             <SelectTrigger className="w-32 h-8 text-xs bg-card border-border">
-              <SelectValue />
+              <span>{opts.flip ?? 'none'}</span>
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               {FLIPS.map((f) => (

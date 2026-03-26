@@ -6,7 +6,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 
@@ -27,7 +26,7 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
           onValueChange={(v) => v !== null && onFormat(v === '_original' ? '' : v)}
         >
           <SelectTrigger className="w-36 h-8 text-sm bg-card border-border">
-            <SelectValue />
+            <span>{FORMAT_LABELS[format] || 'Keep original'}</span>
           </SelectTrigger>
           <SelectContent className="bg-card border-border">
             {FORMATS.map((f) => (

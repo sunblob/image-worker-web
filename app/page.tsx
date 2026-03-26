@@ -1,5 +1,5 @@
-import { CompressPage } from '@/components/compress/CompressPage'
+import { redirect } from 'next/navigation'
 
 export default function Home() {
-  return <CompressPage />
+  redirect('/compress')
 }
