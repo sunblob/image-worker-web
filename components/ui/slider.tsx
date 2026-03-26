@@ -19,13 +19,17 @@ function Slider({
         ? value
         : Array.isArray(defaultValue)
           ? defaultValue
-          : [min, max],
-    [value, defaultValue, min, max]
+          : typeof value === 'number'
+            ? [value]
+            : typeof defaultValue === 'number'
+              ? [defaultValue]
+              : [min],
+    [value, defaultValue, min]
   )
 
   return (
     <SliderPrimitive.Root
-      className={cn("data-horizontal:w-full data-vertical:h-full", className)}
+      className={cn("data-vertical:h-full", className)}
       data-slot="slider"
       defaultValue={defaultValue}
       value={value}
