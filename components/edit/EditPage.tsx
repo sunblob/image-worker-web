@@ -1,0 +1,122 @@
+'use client'
+
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { editFile, pollJob, waitForJob, downloadUrl, MAX_FILE_BYTES, type EditOptions, type JobRecord } from '@/lib/api'
+import { DropZone } from '@/components/compress/DropZone'
+import { ControlsPanel } from './ControlsPanel'
+import { ImagePreview } from './ImagePreview'
+
+export function EditPage() {
+  const [opts, setOpts] = useState<EditOptions>({ quality: 80 })
+  const [applying, setApplying] = useState(false)
+
+  const originalFileRef = useRef<File | null>(null)
+  const [firstJobId, setFirstJobId] = useState<string | null>(null)
+  const [currentJobId, setCurrentJobId] = useState<string | null>(null)
+  const [currentJob, setCurrentJob] = useState<JobRecord | null>(null)
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null)
+
+  // Revoke blob URLs when they're replaced or on unmount
+  useEffect(() => {
+    return () => {
+      if (previewSrc?.startsWith('blob:')) URL.revokeObjectURL(previewSrc)
+    }
+  }, [previewSrc])
+
+  function loadFile(file: File) {
+    if (file.size > MAX_FILE_BYTES) {
+      alert('File exceeds 50MB limit')
+      return
+    }
+    originalFileRef.current = file
+    setPreviewSrc(URL.createObjectURL(file))
+    setFirstJobId(null)
+    setCurrentJobId(null)
+    setCurrentJob(null)
+  }
+
+  async function handleApply() {
+    const originalFile = originalFileRef.current
+    if (!originalFile) return
+
+    setApplying(true)
+    try {
+      const source = currentJobId
+        ? { sourceJobId: currentJobId }
+        : { file: originalFile }
+
+      const { id } = await editFile(opts, source)
+      const job = await waitForJob(id)
+
+      if (!job) {
+        // pollJob returns null on 404 — job expired before result was ready; re-upload
+        const { id: retryId } = await editFile(opts, { file: originalFile })
+        const retryJob = await waitForJob(retryId)
+        if (!retryJob || retryJob.status !== 'done') return
+        if (!firstJobId) setFirstJobId(retryId)
+        setCurrentJobId(retryId)
+        setCurrentJob(retryJob)
+        setPreviewSrc(downloadUrl(retryId))
+        return
+      }
+
+      if (job.status !== 'done') return
+
+      if (!firstJobId) setFirstJobId(id)
+      setCurrentJobId(id)
+      setCurrentJob(job)
+      setPreviewSrc(downloadUrl(id))
+    } finally {
+      setApplying(false)
+    }
+  }
+
+  const handleReset = useCallback(async () => {
+    const originalFile = originalFileRef.current
+    if (!originalFile) return
+
+    if (firstJobId) {
+      const job = await pollJob(firstJobId)
+      if (job !== null) {
+        setCurrentJobId(firstJobId)
+        setCurrentJob(job)
+        setPreviewSrc(downloadUrl(firstJobId))
+        return
+      }
+    }
+
+    setPreviewSrc(URL.createObjectURL(originalFile))
+    setFirstJobId(null)
+    setCurrentJobId(null)
+    setCurrentJob(null)
+  }, [firstJobId])
+
+  const hasImage = !!previewSrc
+
+  return (
+    <div className="max-w-4xl">
+      <h1 className="text-xl font-semibold mb-6">Edit</h1>
+
+      {!hasImage ? (
+        <DropZone onFiles={([file]) => loadFile(file)} />
+      ) : (
+        <div className="flex gap-8 items-start">
+          <ImagePreview
+            previewSrc={previewSrc}
+            jobId={currentJobId}
+            originalName={currentJob?.originalName ?? null}
+            ext={currentJob?.ext ?? null}
+          />
+          <ControlsPanel
+            opts={opts}
+            onChange={setOpts}
+            onApply={handleApply}
+            onReset={handleReset}
+            applying={applying}
+            hasImage={hasImage}
+          />
+        </div>
+      )}
+    </div>
+  )
+}

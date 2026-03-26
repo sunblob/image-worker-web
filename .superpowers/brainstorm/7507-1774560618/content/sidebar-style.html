@@ -1,0 +1,70 @@
+<h2>What sidebar style do you prefer?</h2>
+<p class="subtitle">Dark theme — now let's pick the sidebar layout</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="icons-labels" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f; padding:16px; height:160px;">
+      <div style="display:flex; gap:10px; height:100%;">
+        <div style="width:72px; background:#111; border-radius:8px; padding:10px 8px; display:flex; flex-direction:column; gap:4px; border:1px solid #222;">
+          <div style="font-size:8px; color:#555; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; padding-left:4px;">Image Worker</div>
+          <div style="display:flex; align-items:center; gap:6px; background:#6366f1; border-radius:5px; padding:5px 6px;">
+            <div style="width:10px; height:10px; background:#a5b4fc; border-radius:2px;"></div>
+            <span style="font-size:8px; color:#fff; font-weight:600;">Compress</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; border-radius:5px; padding:5px 6px;">
+            <div style="width:10px; height:10px; background:#333; border-radius:2px;"></div>
+            <span style="font-size:8px; color:#666;">Edit</span>
+          </div>
+        </div>
+        <div style="flex:1; background:#111; border-radius:8px; border:1px solid #222;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Icons + Labels</h3>
+      <p>Icon and text nav items with active highlight — clear, accessible, classic sidebar feel</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="minimal-collapsed" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f; padding:16px; height:160px;">
+      <div style="display:flex; gap:10px; height:100%;">
+        <div style="width:44px; background:#111; border-radius:8px; padding:10px 8px; display:flex; flex-direction:column; align-items:center; gap:6px; border:1px solid #222;">
+          <div style="width:20px; height:20px; background:#6366f1; border-radius:5px; margin-top:8px;"></div>
+          <div style="width:20px; height:20px; background:#222; border-radius:5px;"></div>
+        </div>
+        <div style="flex:1; background:#111; border-radius:8px; border:1px solid #222;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Icon-only (collapsed)</h3>
+      <p>Compact icon-only rail — saves space, modern look, tooltips on hover for labels</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="wide-sections" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f; padding:16px; height:160px;">
+      <div style="display:flex; gap:10px; height:100%;">
+        <div style="width:96px; background:#111; border-radius:8px; padding:10px 8px; display:flex; flex-direction:column; gap:4px; border:1px solid #222;">
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; padding:4px;">
+            <div style="width:14px; height:14px; background:#6366f1; border-radius:3px;"></div>
+            <span style="font-size:9px; color:#fff; font-weight:700;">Image Worker</span>
+          </div>
+          <div style="font-size:7px; color:#444; text-transform:uppercase; letter-spacing:1px; padding:0 4px; margin-top:4px;">Tools</div>
+          <div style="display:flex; align-items:center; gap:6px; background:#6366f1; border-radius:5px; padding:5px 6px;">
+            <span style="font-size:8px; color:#fff;">⚡ Compress</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; padding:5px 6px;">
+            <span style="font-size:8px; color:#555;">✏️ Edit</span>
+          </div>
+        </div>
+        <div style="flex:1; background:#111; border-radius:8px; border:1px solid #222;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Wide with logo</h3>
+      <p>Wider sidebar with app logo/name at top, section grouping — more room to grow as features are added</p>
+    </div>
+  </div>
+
+</div>
