@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { compressFiles, downloadAllUrl, type JobEntry } from '@/lib/api'
+import { Button } from '@/components/ui/button'
 import { DropZone } from './DropZone'
 import { FormatOptions } from './FormatOptions'
 import { JobRow } from './JobRow'
@@ -74,15 +75,16 @@ export function CompressPage() {
             <span className="text-xs text-muted-foreground">
               {queue.length} file{queue.length !== 1 ? 's' : ''}
             </span>
-            {doneJobIds.length > 0 && (
-              <a
-                href={downloadAllUrl(doneJobIds)}
-                download
-                className="text-xs px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
-              >
-                Download all ({doneJobIds.length})
-              </a>
-            )}
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setQueue([])}>
+                Clear
+              </Button>
+              {doneJobIds.length > 0 && (
+                <Button size="sm" className="h-7 text-xs" render={<a href={downloadAllUrl(doneJobIds)} download />}>
+                  Download all ({doneJobIds.length})
+                </Button>
+              )}
+            </div>
           </div>
           {queue.map((item) => (
             <JobRow

@@ -88,7 +88,7 @@ export function JobRow({ id, filename, initialStatus, onDone }: Props) {
         <>
           <span className="text-xs text-muted-foreground whitespace-nowrap">
             {formatBytes(job.sizeBefore)} → {formatBytes(job.sizeAfter!)}
-            <span className="ml-1.5 text-green-400 font-medium">
+            <span className={`ml-1.5 font-medium ${job.sizeAfter! < job.sizeBefore ? 'text-green-400' : 'text-red-400'}`}>
               {savings(job.sizeBefore, job.sizeAfter!)}
             </span>
           </span>
