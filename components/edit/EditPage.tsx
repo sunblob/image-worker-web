@@ -110,21 +110,23 @@ export function EditPage() {
   const hasImage = !!previewSrc
 
   return (
-    <div className="max-w-4xl w-full">
-      <h1 className="text-xl font-semibold text-foreground mb-6">Edit</h1>
+    <div className="flex flex-col items-center gap-6 w-full">
+      <div className="w-full max-w-4xl">
+        <h1 className="text-xl font-semibold text-foreground mb-6">Edit</h1>
+      </div>
 
       {!hasImage ? (
-        <div className="flex justify-center">
-          <DropZone onFiles={([file]) => loadFile(file)} flashing={flashing} />
-        </div>
+        <DropZone onFiles={([file]) => loadFile(file)} flashing={flashing} />
       ) : (
-        <div className="flex gap-8 items-start">
-          <ImagePreview
-            previewSrc={previewSrc}
-            jobId={currentJobId}
-            originalName={currentJob?.originalName ?? null}
-            ext={currentJob?.ext ?? null}
-          />
+        <div className="w-full max-w-4xl flex flex-col md:flex-row gap-8 items-start">
+          <div className="flex-1 min-w-0">
+            <ImagePreview
+              previewSrc={previewSrc}
+              jobId={currentJobId}
+              originalName={currentJob?.originalName ?? null}
+              ext={currentJob?.ext ?? null}
+            />
+          </div>
           <ControlsPanel
             opts={opts}
             onChange={setOpts}

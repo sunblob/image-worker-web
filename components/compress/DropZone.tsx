@@ -48,8 +48,8 @@ export function DropZone({ onFiles, disabled, flashing }: Props) {
       ].join(' ')}
       style={{
         background: dragging
-          ? 'radial-gradient(ellipse at 50% 60%, rgba(99,102,241,0.12) 0%, transparent 70%)'
-          : 'radial-gradient(ellipse at 50% 60%, rgba(99,102,241,0.06) 0%, transparent 70%)',
+          ? 'radial-gradient(ellipse at 50% 60%, rgba(232,114,58,0.12) 0%, transparent 70%)'
+          : 'radial-gradient(ellipse at 50% 60%, rgba(232,114,58,0.06) 0%, transparent 70%)',
       }}
     >
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">

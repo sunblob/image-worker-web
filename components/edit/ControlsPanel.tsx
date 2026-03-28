@@ -38,7 +38,7 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
     set(opts, onChange, key, value)
 
   return (
-    <div className="flex flex-col gap-5 w-64">
+    <div className="flex flex-col gap-5 w-full md:w-64">
 
       <section className="flex flex-col gap-3">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Output</h3>
