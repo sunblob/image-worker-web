@@ -1,26 +1,23 @@
-'use client'
+'use client';
 
-import { FORMATS, FORMAT_LABELS } from '@/lib/api'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select'
-import { Slider } from '@/components/ui/slider'
+import { FORMATS, FORMAT_LABELS } from '@/lib/api';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 
 interface Props {
-  format: string
-  quality: number
-  onFormat: (f: string) => void
-  onQuality: (q: number) => void
+  format: string;
+  quality: number;
+  onFormat: (f: string) => void;
+  onQuality: (q: number) => void;
 }
 
 export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
   return (
     <div className="flex items-center gap-4 flex-wrap mb-6">
       <div className="flex items-center gap-2">
-        <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Format</span>
+        <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+          Format
+        </span>
         <Select
           value={format || '_original'}
           onValueChange={(v) => v !== null && onFormat(v === '_original' ? '' : v)}
@@ -39,7 +36,9 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Quality</span>
+        <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+          Quality
+        </span>
         <Slider
           min={1}
           max={100}
@@ -51,5 +50,5 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
         <span className="text-sm text-foreground w-7 text-right tabular-nums">{quality}</span>
       </div>
     </div>
-  )
+  );
 }

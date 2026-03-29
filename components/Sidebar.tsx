@@ -1,25 +1,20 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { PanelLeft, Zap, Pencil } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { PanelLeft, Zap, Pencil } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const links = [
   { href: '/compress', label: 'Compress', icon: Zap },
   { href: '/edit', label: 'Edit', icon: Pencil },
-]
+];
 
 export function Sidebar() {
-  const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
+  const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <TooltipProvider delay={0}>
@@ -45,20 +40,22 @@ export function Sidebar() {
             <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold">
               IW
             </div>
-            <span className="text-sm font-bold text-foreground whitespace-nowrap">Image Worker</span>
+            <span className="text-sm font-bold text-foreground whitespace-nowrap">
+              Image Worker
+            </span>
           </div>
         </div>
 
         {/* Nav */}
         <nav className="flex flex-col gap-1 p-2 flex-1">
           {links.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || pathname.startsWith(href + '/')
+            const active = pathname === href || pathname.startsWith(href + '/');
 
             const itemClasses = `relative flex items-center gap-2 rounded-lg p-1 transition-colors ${
               active
                 ? 'text-primary bg-primary/10'
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-            }`
+            }`;
 
             const itemContent = (
               <>
@@ -79,7 +76,7 @@ export function Sidebar() {
                   {label}
                 </span>
               </>
-            )
+            );
 
             if (collapsed) {
               return (
@@ -89,17 +86,17 @@ export function Sidebar() {
                   </TooltipTrigger>
                   <TooltipContent side="right">{label}</TooltipContent>
                 </Tooltip>
-              )
+              );
             }
 
             return (
               <Link key={href} href={href} className={itemClasses}>
                 {itemContent}
               </Link>
-            )
+            );
           })}
         </nav>
       </aside>
     </TooltipProvider>
-  )
+  );
 }

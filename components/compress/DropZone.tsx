@@ -1,48 +1,49 @@
-'use client'
+'use client';
 
-import { useRef, useState } from 'react'
-import { MAX_FILE_BYTES } from '@/lib/api'
-import { Upload } from 'lucide-react'
+import { useRef, useState } from 'react';
+import { MAX_FILE_BYTES } from '@/lib/api';
+import { Upload } from 'lucide-react';
 
 interface Props {
-  onFiles: (files: File[]) => void
-  disabled?: boolean
-  flashing?: boolean
+  onFiles: (files: File[]) => void;
+  disabled?: boolean;
+  flashing?: boolean;
 }
 
 export function DropZone({ onFiles, disabled, flashing }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [dragging, setDragging] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
 
   function handle(files: FileList | null) {
-    if (!files) return
+    if (!files) return;
     const valid = Array.from(files).filter((f) => {
       if (f.size > MAX_FILE_BYTES) {
-        alert(`${f.name} exceeds 50MB limit`)
-        return false
+        alert(`${f.name} exceeds 50MB limit`);
+        return false;
       }
-      return true
-    })
-    if (valid.length) onFiles(valid)
+      return true;
+    });
+    if (valid.length) onFiles(valid);
   }
 
   return (
     <div
       onClick={() => !disabled && inputRef.current?.click()}
-      onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
       onDragLeave={() => setDragging(false)}
       onDrop={(e) => {
-        e.preventDefault()
-        setDragging(false)
-        if (!disabled) handle(e.dataTransfer.files)
+        e.preventDefault();
+        setDragging(false);
+        if (!disabled) handle(e.dataTransfer.files);
       }}
       className={[
         'relative flex h-56 w-full max-w-2xl flex-col items-center justify-center gap-3',
         'rounded-2xl border-2 border-dashed transition-all duration-200 select-none',
         'cursor-pointer',
-        dragging
-          ? 'border-primary/60 scale-[1.01]'
-          : 'border-primary/40 hover:border-primary/60',
+        dragging ? 'border-primary/60 scale-[1.01]' : 'border-primary/40 hover:border-primary/60',
         disabled ? 'opacity-50 pointer-events-none' : '',
         flashing ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : '',
       ].join(' ')}
@@ -72,5 +73,5 @@ export function DropZone({ onFiles, disabled, flashing }: Props) {
         onChange={(e) => handle(e.target.files)}
       />
     </div>
-  )
+  );
 }

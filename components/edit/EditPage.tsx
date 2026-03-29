@@ -15,7 +15,7 @@ import { ControlsPanel } from './ControlsPanel';
 import { ImagePreview } from './ImagePreview';
 
 export function EditPage() {
-  const [opts, setOpts] = useState<EditOptions>({ quality: 80 });
+  const [opts, setOpts] = useState<EditOptions>({ quality: 93 });
   const [applying, setApplying] = useState(false);
   const [flashing, setFlashing] = useState(false);
 
