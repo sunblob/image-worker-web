@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Zap, Pencil } from 'lucide-react';
+import { Zap, Pencil, Globe } from 'lucide-react';
 
 const links = [
   { href: '/compress', label: 'Compress', icon: Zap },
   { href: '/edit', label: 'Edit', icon: Pencil },
+  { href: '/scrape', label: 'Scrape', icon: Globe },
 ];
 
 export function MobileNav() {

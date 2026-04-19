@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { PanelLeft, Zap, Pencil } from 'lucide-react';
+import { PanelLeft, Zap, Pencil, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const links = [
   { href: '/compress', label: 'Compress', icon: Zap },
   { href: '/edit', label: 'Edit', icon: Pencil },
+  { href: '/scrape', label: 'Scrape', icon: Globe },
 ];
 
 export function Sidebar() {

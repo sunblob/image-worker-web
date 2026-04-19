@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { compressFiles, downloadAllUrl, type JobEntry } from '@/lib/api';
+import { compressFiles, compressFromUrls, downloadAllUrl, type JobEntry } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { DropZone } from './DropZone';
 import { FormatOptions } from './FormatOptions';
@@ -22,6 +22,19 @@ export function CompressPage() {
     setUploading(true);
     try {
       const { jobs } = await compressFiles(files, {
+        format: format || undefined,
+        quality,
+      });
+      setQueue((q) => [...q, ...jobs.map((j) => ({ ...j, done: false }))]);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleUrls(urls: string[]) {
+    setUploading(true);
+    try {
+      const { jobs } = await compressFromUrls(urls, {
         format: format || undefined,
         quality,
       });
@@ -67,7 +80,7 @@ export function CompressPage() {
         />
       </div>
 
-      <DropZone onFiles={handleFiles} disabled={uploading} flashing={flashing} />
+      <DropZone onFiles={handleFiles} onUrls={handleUrls} disabled={uploading} flashing={flashing} />
 
       {queue.length > 0 && (
         <div className="w-full max-w-2xl space-y-1">

@@ -1,13 +1,16 @@
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
 export const MAX_FILE_BYTES = 50 * 1024 * 1024
-export const FORMATS = ['', 'webp', 'avif', 'jpeg', 'png'] as const
+export const FORMATS = ['', 'webp', 'avif', 'jpeg', 'png', 'tiff', 'heif', 'jxl'] as const
 export const FORMAT_LABELS: Record<string, string> = {
   '': 'Keep original',
   webp: 'WebP',
   avif: 'AVIF',
   jpeg: 'JPEG',
   png: 'PNG',
+  tiff: 'TIFF',
+  heif: 'HEIF',
+  jxl: 'JPEG XL',
 }
 
 export interface JobEntry {
@@ -34,7 +37,7 @@ export interface JobRecord {
 }
 
 export interface EditOptions {
-  format?: 'webp' | 'avif' | 'jpeg' | 'png'
+  format?: 'webp' | 'avif' | 'jpeg' | 'png' | 'tiff' | 'heif' | 'jxl'
   quality?: number
   width?: number
   height?: number
@@ -61,6 +64,19 @@ export async function compressFiles(
   if (opts.quality != null) form.append('quality', String(opts.quality))
   const res = await fetch(`${BASE}/compress`, { method: 'POST', body: form })
   if (!res.ok) throw new Error(`compress failed: ${res.status}`)
+  return res.json()
+}
+
+export async function compressFromUrls(
+  urls: string[],
+  opts: { format?: string; quality?: number }
+): Promise<CompressResponse> {
+  const form = new FormData()
+  for (const url of urls) form.append('urls', url)
+  if (opts.format) form.append('format', opts.format)
+  if (opts.quality != null) form.append('quality', String(opts.quality))
+  const res = await fetch(`${BASE}/compress`, { method: 'POST', body: form })
+  if (!res.ok) throw new Error(`compress-urls failed: ${res.status}`)
   return res.json()
 }
 
@@ -93,6 +109,37 @@ export async function editFile(
   form.append('options', JSON.stringify(opts))
   const res = await fetch(`${BASE}/edit`, { method: 'POST', body: form })
   if (!res.ok) throw new Error(`edit failed: ${res.status}`)
+  return res.json()
+}
+
+export interface ScrapedImage {
+  url: string
+  alt?: string
+  width?: number
+  height?: number
+  source: 'img' | 'picture' | 'css-bg' | 'meta' | 'icon'
+}
+
+export interface ScrapeFilters {
+  excludeIcons?: boolean
+  excludeHead?: boolean
+  excludeDataUri?: boolean
+  excludeSvg?: boolean
+}
+
+export async function scrapeWebsite(
+  url: string,
+  filters: ScrapeFilters,
+): Promise<{ images: ScrapedImage[] }> {
+  const res = await fetch(`${BASE}/scrape`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, ...filters }),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error ?? `scrape failed: ${res.status}`)
+  }
   return res.json()
 }
 
