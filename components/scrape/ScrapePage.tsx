@@ -203,9 +203,22 @@ export function ScrapePage() {
                   <div className="absolute top-1 right-1 text-[10px] uppercase tracking-wider bg-background/80 text-muted-foreground px-1.5 py-0.5 rounded">
                     {img.source}
                   </div>
-                  <div className="p-2 text-[11px] text-muted-foreground truncate" title={img.url}>
-                    {img.width && img.height ? `${img.width}×${img.height} · ` : ''}
-                    {new URL(img.url).pathname.split('/').pop() || img.url}
+                  <div className="p-2 text-[11px] text-muted-foreground space-y-0.5">
+                    <div className="flex items-center gap-1 flex-wrap">
+                      {img.width && img.height && (
+                        <span>{img.width}×{img.height}</span>
+                      )}
+                      {img.size != null && (
+                        <span className={img.width && img.height ? 'before:content-["·"] before:mr-1' : ''}>
+                          {img.size < 1024 * 1024
+                            ? `${(img.size / 1024).toFixed(0)} KB`
+                            : `${(img.size / (1024 * 1024)).toFixed(1)} MB`}
+                        </span>
+                      )}
+                    </div>
+                    <div className="truncate" title={img.url}>
+                      {new URL(img.url).pathname.split('/').pop() || img.url}
+                    </div>
                   </div>
                 </button>
               );
