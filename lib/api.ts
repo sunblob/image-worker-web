@@ -117,7 +117,6 @@ export interface ScrapedImage {
   alt?: string
   width?: number
   height?: number
-  size?: number          // bytes, from Content-Length HEAD request
   source: 'img' | 'picture' | 'css-bg' | 'meta' | 'icon'
 }
 
