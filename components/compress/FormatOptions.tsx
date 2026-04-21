@@ -62,7 +62,26 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
           onValueChange={(v) => onQuality(Array.isArray(v) ? v[0] : v)}
           className="w-28"
         />
-        <span className="text-sm text-foreground w-7 text-right tabular-nums">{quality}</span>
+        <input
+          type="number"
+          min={1}
+          max={100}
+          step={1}
+          value={quality}
+          onChange={(e) => {
+            // Allow empty string mid-edit; only commit valid numbers
+            const raw = e.target.value;
+            if (raw === '') return;
+            const n = parseInt(raw, 10);
+            if (Number.isFinite(n)) onQuality(Math.min(100, Math.max(1, n)));
+          }}
+          onBlur={(e) => {
+            // Clamp on blur if left invalid (e.g. cleared)
+            const n = parseInt(e.target.value, 10);
+            if (!Number.isFinite(n)) onQuality(1);
+          }}
+          className="h-8 w-14 rounded-md border border-border bg-card px-2 text-sm text-foreground tabular-nums text-right focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
       </div>
     </div>
   );
