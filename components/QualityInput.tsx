@@ -13,18 +13,14 @@ interface Props {
 }
 
 /**
- * Number input backed by local string state so the user can freely clear,
- * backspace, and retype. Valid numbers in range are propagated to the parent
- * on every keystroke; anything invalid is reconciled on blur (empty → revert
- * to last known value, out-of-range → clamped).
- *
- * Stays in sync with external changes (e.g. a linked slider) via an effect
- * that re-mirrors `value` into the text state.
+ * Number input backed by local string state so the user can freely clear
+ * and retype. Valid in-range numbers propagate on every keystroke; empty
+ * or out-of-range states reconcile on blur (revert or clamp).
  */
 export function QualityInput({ value, onChange, min = 1, max = 100, className }: Props) {
   const [text, setText] = useState(String(value));
 
-  // Sync local text when the external value changes (slider drag, reset, etc.)
+  // Mirror external value changes (slider drag, reset) into the text state.
   useEffect(() => {
     setText(String(value));
   }, [value]);
@@ -39,15 +35,13 @@ export function QualityInput({ value, onChange, min = 1, max = 100, className }:
       onChange={(e) => {
         const raw = e.target.value;
         setText(raw);
-        if (raw === '' || raw === '-') return; // allow transient empty state
+        if (raw === '') return; // allow transient empty state mid-edit
         const n = parseInt(raw, 10);
         if (Number.isFinite(n) && n >= min && n <= max) onChange(n);
       }}
       onBlur={() => {
         const n = parseInt(text, 10);
-        let clamped: number;
-        if (!Number.isFinite(n)) clamped = value;        // empty → revert
-        else clamped = Math.min(max, Math.max(min, n));  // out-of-range → clamp
+        const clamped = Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : value;
         if (clamped !== value) onChange(clamped);
         setText(String(clamped));
       }}

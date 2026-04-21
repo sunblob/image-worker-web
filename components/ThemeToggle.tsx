@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { Sun, Moon, Monitor, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type Theme = 'light' | 'dark' | 'system';
 
 const STORAGE_KEY = 'theme';
 
-/** Apply the .dark class on <html> based on theme + system preference. */
 function applyTheme(theme: Theme) {
   if (typeof window === 'undefined') return;
   const dark =
@@ -30,49 +29,45 @@ interface Props {
   className?: string;
 }
 
+const OPTIONS: Array<{ value: Theme; label: string; Icon: LucideIcon }> = [
+  { value: 'light', label: 'Light', Icon: Sun },
+  { value: 'dark', label: 'Dark', Icon: Moon },
+  { value: 'system', label: 'System', Icon: Monitor },
+];
+
 export function ThemeToggle({ compact = false, className }: Props) {
-  // Start with 'system' on both server and first client render to avoid hydration mismatch.
+  // Start with 'system' on SSR + first client render to avoid hydration mismatch;
+  // the inline script in layout.tsx has already applied the real class pre-hydration.
   const [theme, setTheme] = useState<Theme>('system');
   const [mounted, setMounted] = useState(false);
 
-  // After mount, load the real stored value.
   useEffect(() => {
     setTheme(readStoredTheme());
     setMounted(true);
   }, []);
 
-  // Re-apply whenever theme changes post-mount.
   useEffect(() => {
     if (!mounted) return;
     applyTheme(theme);
     try {
       window.localStorage.setItem(STORAGE_KEY, theme);
     } catch {
-      // localStorage unavailable (private mode) — silently ignore
+      // localStorage unavailable (private mode) — ignore
     }
-  }, [theme, mounted]);
-
-  // Re-apply when system preference changes (only if on system mode)
-  useEffect(() => {
-    if (!mounted) return;
+    if (theme !== 'system') return;
+    // Only subscribe while on system mode so toggles between light/dark don't
+    // re-add/remove the listener.
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => {
-      if (theme === 'system') applyTheme('system');
+    const handler = (e: MediaQueryListEvent) => {
+      document.documentElement.classList.toggle('dark', e.matches);
     };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, [theme, mounted]);
 
-  const options: Array<{ value: Theme; label: string; Icon: typeof Sun }> = [
-    { value: 'light', label: 'Light', Icon: Sun },
-    { value: 'dark', label: 'Dark', Icon: Moon },
-    { value: 'system', label: 'System', Icon: Monitor },
-  ];
-
   if (compact) {
-    // Cycle: light → dark → system → light …
     const nextMap: Record<Theme, Theme> = { light: 'dark', dark: 'system', system: 'light' };
-    const current = options.find((o) => o.value === theme) ?? options[2];
+    const current = OPTIONS.find((o) => o.value === theme)!;
     const Icon = current.Icon;
     return (
       <button
@@ -99,7 +94,7 @@ export function ThemeToggle({ compact = false, className }: Props) {
         className,
       )}
     >
-      {options.map(({ value, label, Icon }) => {
+      {OPTIONS.map(({ value, label, Icon }) => {
         const active = theme === value;
         return (
           <button

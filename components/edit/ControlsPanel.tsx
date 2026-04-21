@@ -1,11 +1,12 @@
 'use client';
 
-import { FORMATS, FORMAT_LABELS, DISABLED_FORMATS, type EditOptions } from '@/lib/api';
+import type { EditOptions } from '@/lib/api';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { QualityInput } from '@/components/QualityInput';
+import { FormatSelect } from '@/components/FormatSelect';
 
 interface Props {
   opts: EditOptions;
@@ -42,37 +43,12 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
 
         <div className="flex items-center justify-between text-sm">
           <span className="text-foreground">Format</span>
-          <Select
-            value={opts.format ?? '_original'}
-            onValueChange={(v) =>
-              v !== null &&
-              s('format', (v === '_original' ? undefined : v) as EditOptions['format'])
-            }
-          >
-            <SelectTrigger className="w-44 h-8 text-xs bg-card border-border">
-              <span>{FORMAT_LABELS[opts.format ?? ''] || 'Keep original'}</span>
-            </SelectTrigger>
-            <SelectContent className="bg-card border-border">
-              <SelectItem value="_original" className="text-xs">
-                Keep original
-              </SelectItem>
-              {FORMATS.filter(Boolean).map((f) => {
-                const disabled = DISABLED_FORMATS.has(f);
-                return (
-                  <SelectItem key={f} value={f} disabled={disabled} className="text-xs">
-                    <span className="flex items-center justify-between gap-2 w-full">
-                      <span>{FORMAT_LABELS[f]}</span>
-                      {disabled && (
-                        <span className="rounded-sm px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-orange-500 text-white">
-                          Coming soon
-                        </span>
-                      )}
-                    </span>
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+          <FormatSelect
+            value={opts.format ?? ''}
+            onChange={(v) => s('format', (v || undefined) as EditOptions['format'])}
+            size="xs"
+            triggerClassName="w-44"
+          />
         </div>
 
         <div className="flex items-center justify-between text-sm">

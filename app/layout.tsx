@@ -29,7 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen bg-background text-foreground antialiased">
         <Sidebar />
         <main className="relative flex-1 min-w-0 p-4 md:p-8 pb-20 md:pb-8">
-          {/* Mobile-only theme toggle — aligned with the page title */}
           <div className="md:hidden absolute top-4 right-4 z-10 rounded-md border border-border bg-card shadow-sm">
             <ThemeToggle compact />
           </div>
