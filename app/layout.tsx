@@ -28,13 +28,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="flex min-h-screen bg-background text-foreground antialiased">
         <Sidebar />
-        <main className="flex-1 min-w-0 p-4 pt-16 md:p-8 md:pt-8 pb-20 md:pb-8">{children}</main>
-
-        {/* Mobile-only floating theme toggle — top right */}
-        <div className="md:hidden fixed top-3 right-3 z-50 rounded-md border border-border bg-card shadow-sm">
-          <ThemeToggle compact />
-        </div>
-
+        <main className="relative flex-1 min-w-0 p-4 md:p-8 pb-20 md:pb-8">
+          {/* Mobile-only theme toggle — aligned with the page title */}
+          <div className="md:hidden absolute top-4 right-4 z-10 rounded-md border border-border bg-card shadow-sm">
+            <ThemeToggle compact />
+          </div>
+          {children}
+        </main>
         <MobileNav />
       </body>
     </html>
