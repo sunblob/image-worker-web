@@ -22,7 +22,7 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
           value={format || '_original'}
           onValueChange={(v) => v !== null && onFormat(v === '_original' ? '' : v)}
         >
-          <SelectTrigger className="w-36 h-8 text-sm bg-card border-border">
+          <SelectTrigger className="w-52 h-8 text-sm bg-card border-border">
             <span>{FORMAT_LABELS[format] || 'Keep original'}</span>
           </SelectTrigger>
           <SelectContent className="bg-card border-border">
