@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Zap, Pencil, Globe } from 'lucide-react';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 const links = [
   { href: '/compress', label: 'Compress', icon: Zap },
@@ -15,7 +14,7 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center border-t border-border bg-card">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-card">
       {links.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(href + '/');
         return (
@@ -35,9 +34,6 @@ export function MobileNav() {
           </Link>
         );
       })}
-      <div className="px-2">
-        <ThemeToggle compact />
-      </div>
     </nav>
   );
 }
