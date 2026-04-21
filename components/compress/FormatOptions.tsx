@@ -3,7 +3,7 @@
 import { FORMATS, FORMAT_LABELS, DISABLED_FORMATS } from '@/lib/api';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
+import { QualityInput } from '@/components/QualityInput';
 
 interface Props {
   format: string;
@@ -63,26 +63,7 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
           onValueChange={(v) => onQuality(Array.isArray(v) ? v[0] : v)}
           className="w-28"
         />
-        <Input
-          type="number"
-          min={1}
-          max={100}
-          step={1}
-          value={quality}
-          onChange={(e) => {
-            // Allow empty string mid-edit; only commit valid numbers
-            const raw = e.target.value;
-            if (raw === '') return;
-            const n = parseInt(raw, 10);
-            if (Number.isFinite(n)) onQuality(Math.min(100, Math.max(1, n)));
-          }}
-          onBlur={(e) => {
-            // Clamp on blur if left invalid (e.g. cleared)
-            const n = parseInt(e.target.value, 10);
-            if (!Number.isFinite(n)) onQuality(1);
-          }}
-          className="w-16 text-sm tabular-nums text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        />
+        <QualityInput value={quality} onChange={onQuality} className="w-16 text-sm" />
       </div>
     </div>
   );

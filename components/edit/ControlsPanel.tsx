@@ -1,10 +1,11 @@
 'use client';
 
-import { FORMATS, FORMAT_LABELS, type EditOptions } from '@/lib/api';
+import { FORMATS, FORMAT_LABELS, DISABLED_FORMATS, type EditOptions } from '@/lib/api';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { QualityInput } from '@/components/QualityInput';
 
 interface Props {
   opts: EditOptions;
@@ -48,18 +49,28 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
               s('format', (v === '_original' ? undefined : v) as EditOptions['format'])
             }
           >
-            <SelectTrigger className="w-32 h-8 text-xs bg-card border-border">
+            <SelectTrigger className="w-44 h-8 text-xs bg-card border-border">
               <span>{FORMAT_LABELS[opts.format ?? ''] || 'Keep original'}</span>
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               <SelectItem value="_original" className="text-xs">
                 Keep original
               </SelectItem>
-              {FORMATS.filter(Boolean).map((f) => (
-                <SelectItem key={f} value={f} className="text-xs">
-                  {FORMAT_LABELS[f]}
-                </SelectItem>
-              ))}
+              {FORMATS.filter(Boolean).map((f) => {
+                const disabled = DISABLED_FORMATS.has(f);
+                return (
+                  <SelectItem key={f} value={f} disabled={disabled} className="text-xs">
+                    <span className="flex items-center justify-between gap-2 w-full">
+                      <span>{FORMAT_LABELS[f]}</span>
+                      {disabled && (
+                        <span className="rounded-sm px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-orange-500 text-white">
+                          Coming soon
+                        </span>
+                      )}
+                    </span>
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>
@@ -73,11 +84,13 @@ export function ControlsPanel({ opts, onChange, onApply, onReset, applying, hasI
               step={1}
               value={[opts.quality ?? 80]}
               onValueChange={(v) => s('quality', Array.isArray(v) ? v[0] : v)}
-              className="w-24"
+              className="w-20"
             />
-            <span className="text-xs text-foreground w-6 text-right tabular-nums">
-              {opts.quality ?? 80}
-            </span>
+            <QualityInput
+              value={opts.quality ?? 80}
+              onChange={(n) => s('quality', n)}
+              className="w-14 h-7 text-xs"
+            />
           </div>
         </div>
       </section>
