@@ -12,6 +12,9 @@ export const FORMAT_LABELS: Record<string, string> = {
   heif: 'HEIF',
   jxl: 'JPEG XL',
 }
+// Formats that sharp's prebuilt libvips cannot encode in this build.
+// libvips 8.17 is compiled without libjxl → JPEG XL encoder is unavailable.
+export const DISABLED_FORMATS: Set<string> = new Set(['jxl'])
 
 export interface JobEntry {
   id: string
@@ -121,10 +124,10 @@ export interface ScrapedImage {
 }
 
 export interface ScrapeFilters {
-  excludeIcons?: boolean
-  excludeHead?: boolean
-  excludeDataUri?: boolean
-  excludeSvg?: boolean
+  includeIcons?: boolean
+  includeHead?: boolean
+  includeDataUri?: boolean
+  includeSvg?: boolean
 }
 
 export async function scrapeWebsite(

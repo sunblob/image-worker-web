@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { PanelLeft, Zap, Pencil, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const links = [
   { href: '/compress', label: 'Compress', icon: Zap },
@@ -97,6 +98,20 @@ export function Sidebar() {
             );
           })}
         </nav>
+
+        {/* Footer — theme toggle */}
+        <div className="p-2 border-t border-border">
+          {collapsed ? (
+            <Tooltip>
+              <TooltipTrigger render={<div className="flex justify-center" />}>
+                <ThemeToggle compact />
+              </TooltipTrigger>
+              <TooltipContent side="right">Theme</TooltipContent>
+            </Tooltip>
+          ) : (
+            <ThemeToggle />
+          )}
+        </div>
       </aside>
     </TooltipProvider>
   );

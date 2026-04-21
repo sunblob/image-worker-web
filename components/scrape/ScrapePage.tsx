@@ -20,11 +20,13 @@ interface QueueItem extends JobEntry {
 
 export function ScrapePage() {
   const [url, setUrl] = useState('');
+  // Defaults mirror the previous exclude-based behavior:
+  // icons / head / data-URIs are off, SVGs are on.
   const [filters, setFilters] = useState<ScrapeFilters>({
-    excludeIcons: true,
-    excludeHead: true,
-    excludeDataUri: true,
-    excludeSvg: false,
+    includeIcons: false,
+    includeHead: false,
+    includeDataUri: false,
+    includeSvg: true,
   });
   const [scraping, setScraping] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -110,13 +112,13 @@ export function ScrapePage() {
 
         <div className="flex flex-wrap items-center gap-4 text-sm mb-2">
           <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Filters
+            Include
           </span>
           {([
-            ['excludeIcons', 'Icons / favicons'],
-            ['excludeHead', 'Head meta (og/twitter)'],
-            ['excludeDataUri', 'Data URIs'],
-            ['excludeSvg', 'SVG'],
+            ['includeIcons', 'Icons / favicons'],
+            ['includeHead', 'Head meta (og/twitter)'],
+            ['includeDataUri', 'Data URIs'],
+            ['includeSvg', 'SVG'],
           ] as const).map(([key, label]) => (
             <label key={key} className="flex items-center gap-1.5 cursor-pointer select-none">
               <input

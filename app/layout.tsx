@@ -9,9 +9,22 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = { title: 'Image Worker' }
 
+// Runs before React hydrates — reads stored theme and applies .dark on <html>
+// to avoid a flash of wrong-theme content on first paint.
+const themeScript = `
+(function(){try{
+  var t = localStorage.getItem('theme') || 'system';
+  var isDark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  if (isDark) document.documentElement.classList.add('dark');
+}catch(e){}})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn("dark font-sans", geist.variable)}>
+    <html lang="en" className={cn("font-sans", geist.variable)} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="flex min-h-screen bg-background text-foreground antialiased">
         <Sidebar />
         <main className="flex-1 min-w-0 p-4 md:p-8 pb-20 md:pb-8">{children}</main>
