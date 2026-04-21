@@ -3,6 +3,7 @@
 import { FORMATS, FORMAT_LABELS, DISABLED_FORMATS } from '@/lib/api';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 
 interface Props {
   format: string;
@@ -62,7 +63,7 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
           onValueChange={(v) => onQuality(Array.isArray(v) ? v[0] : v)}
           className="w-28"
         />
-        <input
+        <Input
           type="number"
           min={1}
           max={100}
@@ -80,7 +81,7 @@ export function FormatOptions({ format, quality, onFormat, onQuality }: Props) {
             const n = parseInt(e.target.value, 10);
             if (!Number.isFinite(n)) onQuality(1);
           }}
-          className="h-8 w-14 rounded-md border border-border bg-card px-2 text-sm text-foreground tabular-nums text-right focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          className="w-16 text-sm tabular-nums text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
       </div>
     </div>
