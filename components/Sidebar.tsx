@@ -21,7 +21,7 @@ export function Sidebar() {
   return (
     <TooltipProvider delay={0}>
       <aside
-        className="hidden md:flex flex-col shrink-0 border-r border-border bg-card overflow-hidden transition-[width] duration-200 ease-in-out"
+        className="hidden md:flex flex-col shrink-0 self-start sticky top-0 h-screen border-r border-border bg-card overflow-hidden transition-[width] duration-200 ease-in-out"
         style={{ width: collapsed ? 52 : 220 }}
       >
         {/* Header */}
